@@ -10,7 +10,19 @@ app.use(cors());
 
 const PORT = process.env.PORT || 3001;
 
+// *** BRING IN MONGOOSE ***
+const mongoose = require('mongoose');
+// const { request } = require('http');
 
+// *** PER MONGOOSE DOCS PLUG AND PLAY CODE ****
+mongoose.connect(process.env.DB_URL);
+
+//mongoose status
+const db = mongoose.connection;
+db.on('error', console.error.bind(console, 'connection error:'));
+db.once('open', function () {
+  console.log('Mongoose is connected');
+});
 app.get('/' , (request, response) => {
   response.send('Hello World');
 });
