@@ -23,6 +23,24 @@ db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function () {
   console.log('Mongoose is connected');
 });
+
+
+app.get('/products/:upc', getProductByUPC);
+
+// API URL https://api.upcitemdb.com/prod/trial/lookup?upc={insert upc here}
+
+async function getProductByUPC(request, response, next) {
+  try {
+    let url = `https://api.upcitemdb.com/prod/trial/lookup?upc=${request.params.upc}`;
+    let product = await axios.get(url);
+    response.status(200).json(product.data);
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
+}
+
+// ENDPOINTS
 app.get('/' , (request, response) => {
   response.send('Hello World');
 });
