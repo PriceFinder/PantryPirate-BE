@@ -6,6 +6,7 @@ const cors = require('cors');
 const axios = require('axios');
 const User = require('./models/user.js');
 const List = require('./models/list.js');
+const Pantry = require('./models/pantry.js');
 
 const app = express();
 app.use(cors());
@@ -52,11 +53,16 @@ db.once('open', function () {
 });
 
 app.post('/user', postUser);
+app.get('/user/:name', getUserByEmail);
 app.put('/user/:id', updateUser);
 app.post('/list', postList);
 app.get('/list/:member', getListByMember);
 app.put('/list/:id', updateList);
 app.delete('/list/:id', deleteList);
+app.post('/pantry', postPantry);
+app.get('/pantry/:member', getPantryByMember);
+app.put('/pantry/:id', updatePantry);
+app.delete('/pantry/:id', deletePantry);
 app.get('/products/:upc', getProductByUPC);
 
 // API URL https://api.upcitemdb.com/prod/trial/lookup?upc={insert upc here}
@@ -115,6 +121,17 @@ async function updateList(request, response, next) {
   }
 }
 
+async function getUserByEmail(request, response, next) {
+  try {
+    let email = request.params.email;
+    let foundUser = await User.find({ email: email });
+    response.status(200).json(foundUser);
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
+}
+
 async function getListByMember(request, response, next) {
   try {
     let member = request.params.member;
@@ -137,10 +154,52 @@ async function deleteList(request, response, next) {
   }
 }
 
+async function postPantry(request, response, next) {
+  try {
+    let data = request.body;
 
-// function amazonCall(upc) {
+    let newList = await Pantry.create(data);
+    response.status(200).json(newList);
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
+}
 
-// }
+async function getPantryByMember(request, response, next) {
+  try {
+    let member = request.params.member;
+    let foundList = await Pantry.find({ members: member });
+    response.status(200).json(foundList);
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
+}
+
+async function updatePantry(request, response, next) {
+  try {
+    let id = request.params.id;
+    let data = request.body;
+
+    let updatedUser = await Pantry.findByIdAndUpdate(id, data);
+    response.status(200).json(updatedUser);
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
+}
+
+async function deletePantry(request, response, next) {
+  try {
+    let id = request.params.id;
+    let deletedList = await Pantry.findByIdAndDelete(id);
+    response.status(200).send('List Deleted');
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
+}
 
 
 async function getProductByUPC(request, res, next) {
