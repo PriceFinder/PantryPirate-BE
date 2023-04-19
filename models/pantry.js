@@ -11,7 +11,7 @@ const pantrySchema = new Schema({
   items: { type: Array, required: false },
 });
 
-const PantrySchema = mongoose.model('list', pantrySchema);
+const PantrySchema = mongoose.model('pantry', pantrySchema);
 
 module.exports = PantrySchema;
 
