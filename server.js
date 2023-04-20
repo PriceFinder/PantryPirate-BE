@@ -70,11 +70,12 @@ app.get('/products/:upc', getProductByUPC);
 async function postUser(request, response, next) {
   try {
     let email = request.body.email;
+    let password = request.body.password;
     let foundUser = await User.find({ email: email });
     if (foundUser.length) {
       response.status(200).json(foundUser);
     } else {
-      let newUser = await User.create({ email: email });
+      let newUser = await User.create({ email: email, password: password });
       response.status(200).json(newUser);
     }
   } catch (error) {
