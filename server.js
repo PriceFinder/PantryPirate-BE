@@ -282,4 +282,9 @@ app.get('*', (request, response) => {
   response.status(404).send('Not Available');
 });
 
-app.listen(PORT, () => console.log(`Listening on port ${PORT}`));
+function start() {
+  app.listen(PORT, () => console.log(`Listening on port ${PORT}`));
+}
+start();
+
+module.exports = app;
